@@ -1,5 +1,5 @@
 (function() {
-    var game = new Phaser.Game(800, 480, Phaser.AUTO, 'game', { preload: preload, create: create, update: update });
+    var game = new Phaser.Game(800, 480, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update });
 
     function preload () {
         game.load.image('ground', 'assets/img/ground.gif');
