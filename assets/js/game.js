@@ -10,7 +10,7 @@
 
         this.MAX_SPEED = 250;
         this.ACCELERATION = 600;
-        this.DRAG = 800;
+        this.DRAG = 1800;
         this.GRAVITY = 980;
         this.JUMP_SPEED = -400;
 
