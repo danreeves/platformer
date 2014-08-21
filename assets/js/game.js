@@ -3,16 +3,19 @@
 
     function preload () {
         game.load.image('ground', 'assets/img/ground.gif');
-        game.load.spritesheet('man', 'assets/img/man.gif', 26, 62, 4);
+        game.load.spritesheet('player', 'assets/img/player.gif', 64, 64, 4);
     }
 
     function create () {
 
-        this.MAX_SPEED = 250;
-        this.ACCELERATION = 600;
-        this.DRAG = 1800;
+        this.MAX_SPEED = 350;
+        this.ACCELERATION = 1000;
+        this.DRAG = 180;
         this.GRAVITY = 980;
         this.JUMP_SPEED = -400;
+        this.MAX_JUMPS = 2;
+
+        this.currentJumps = 0;
 
         this.game.stage.backgroundColor = 0x4488cc;
 
@@ -26,18 +29,14 @@
             this.ground.add(groundBlock);
         }
 
-        this.player = this.game.add.sprite(this.game.width/2, this.game.height - 100, 'man');
+        this.player = this.game.add.sprite(this.game.width/2, this.game.height - 100, 'player');
         this.player.anchor.setTo(0.5, 1);
-        this.player.animations.add('walk',[1,2,3]);
 
         this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
         this.player.body.collideWorldBounds = true;
 
 
         this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
-
-
-        this.player.body.collideWorldBounds = true;
 
 
         this.player.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED * 10);
@@ -52,35 +51,51 @@
             Phaser.Keyboard.LEFT,
             Phaser.Keyboard.RIGHT,
             Phaser.Keyboard.UP,
-            Phaser.Keyboard.DOWN
+            Phaser.Keyboard.DOWN,
+            Phaser.Keyboard.SPACEBAR
         ]);
+
+
+        var up = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+        up.onDown.add(function(up) {
+
+            if (this.currentJumps < this.MAX_JUMPS) {
+                this.player.body.velocity.y = this.JUMP_SPEED;
+                this.currentJumps++;
+            }
+
+        }, this);
+
 
     }
 
     function update () {
+        if (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+            game.physics.arcade.gravity.y = -Math.abs(this.GRAVITY);
+        }
+        else {
+            game.physics.arcade.gravity.y = Math.abs(this.GRAVITY);
+
+        }
 
         this.game.physics.arcade.collide(this.player, this.ground);
 
-        if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            this.player.body.acceleration.x = -this.ACCELERATION;
-            this.player.play('walk', 5, true);
-            this.player.scale.x = -1;
-        } else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            this.player.body.acceleration.x = this.ACCELERATION;
-            this.player.play('walk', 5, true);
-            this.player.scale.x = 1;
-        } else {
-            this.player.body.acceleration.x = 0;
-            this.player.frame = 0;
-        }
-
-
         var onTheGround = this.player.body.touching.down;
 
-        if (onTheGround && this.input.keyboard.justPressed(Phaser.Keyboard.UP)) {
-
-            this.player.body.velocity.y = this.JUMP_SPEED;
+        if (onTheGround) {
+            this.currentJumps = 0;
+            this.player.body.drag.setTo(this.DRAG*10, 0);
         }
+        else this.player.body.drag.setTo(this.DRAG, 0);
+
+        if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+            this.player.body.acceleration.x = -this.ACCELERATION;
+        } else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+            this.player.body.acceleration.x = this.ACCELERATION;
+        } else {
+            this.player.body.acceleration.x = 0;
+        }
+
 
     }
 })();
