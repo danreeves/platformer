@@ -8,6 +8,7 @@
 
     function create () {
 
+
         this.MAX_SPEED = 350;
         this.ACCELERATION = 1000;
         this.DRAG = 180;
@@ -35,6 +36,9 @@
         this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
         this.player.body.collideWorldBounds = true;
 
+        this.game.world.setBounds(0, 0, 8000, 480);
+
+        this.game.camera.y = this.game.height - 100;
 
         this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
 
@@ -70,6 +74,7 @@
     }
 
     function update () {
+        this.game.camera.setPosition(this.player.body.x - this.game.width/2, this.player.body.y);
         if (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
             game.physics.arcade.gravity.y = -Math.abs(this.GRAVITY);
         }
