@@ -19,9 +19,10 @@
         this.currentJumps = 0;
 
         this.game.stage.backgroundColor = 0x4488cc;
+        this.game.world.setBounds(0, 0, 8000, 480);
 
         this.ground = this.game.add.group();
-        for(var x = 0; x < this.game.width; x += 32) {
+        for(var x = 0; x < this.game.world.width; x += 256) {
 
             var groundBlock = this.game.add.sprite(x, this.game.height - 32, 'ground');
             this.game.physics.enable(groundBlock, Phaser.Physics.ARCADE);
@@ -30,13 +31,12 @@
             this.ground.add(groundBlock);
         }
 
-        this.player = this.game.add.sprite(this.game.width/2, this.game.height - 100, 'player');
+        this.player = this.game.add.sprite(0, this.game.height - 100, 'player');
         this.player.anchor.setTo(0.5, 1);
 
         this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
-        this.player.body.collideWorldBounds = true;
+        // this.player.body.collideWorldBounds = true;
 
-        this.game.world.setBounds(0, 0, 8000, 480);
 
         this.game.camera.y = this.game.height - 100;
 
